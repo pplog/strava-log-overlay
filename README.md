@@ -1,5 +1,7 @@
 # Strava Log Overlay (Strava ログオーバーレイアプリ)
 
+<img width="2557" height="1339" alt="image" src="https://github.com/user-attachments/assets/1ebea07f-9e72-4323-9562-41752bb10849" />
+
 ## 概要
 
 Stravaのアクティビティデータを可視化し、すべての軌跡をインタラクティブな地図上に表示するウェブアプリケーションです。
@@ -88,6 +90,8 @@ Reactアプリケーションが起動し、ブラウザで `http://localhost:30
 ---
 
 # Strava Log Overlay
+
+<img width="2557" height="1339" alt="image" src="https://github.com/user-attachments/assets/1ebea07f-9e72-4323-9562-41752bb10849" />
 
 ## Overview
 
