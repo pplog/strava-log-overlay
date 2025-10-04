@@ -27,6 +27,8 @@ cd strava-log-overlay
 
 ### 2. Strava API の設定
 
+<img width="897" height="562" alt="image" src="https://github.com/user-attachments/assets/448ab128-3783-4d10-8cda-7cef19b559f1" />
+
 1.  [Strava API 設定ページ](https://www.strava.com/settings/api) にアクセスし、新しいアプリケーションを作成します。
 2.  作成すると **Client ID** と **Client Secret** が発行されます。これらはバックエンドの設定で使用します。
 3.  **Authorization Callback Domain** に `localhost` を設定してください。
@@ -112,6 +114,9 @@ cd strava-log-overlay
 ```
 
 ### 2. Strava API Setup
+
+<img width="897" height="562" alt="image" src="https://github.com/user-attachments/assets/31eaade9-b7ec-4ea4-8d9f-41f58c28d377" />
+
 
 1.  Go to [your Strava API settings page](https://www.strava.com/settings/api) and create a new application.
 2.  You will get a **Client ID** and a **Client Secret**. You'll need these for the backend setup.
