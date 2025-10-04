@@ -115,6 +115,14 @@ const getActivities = async (req, res, forceRefresh = false) => {
 app.get('/strava/activities/:athlete_id', (req, res) => getActivities(req, res, false));
 app.get('/strava/activities/:athlete_id/refresh', (req, res) => getActivities(req, res, true));
 
-app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
-});
+(async () => {
+  try {
+    await fs.mkdir(CACHE_DIR, { recursive: true });
+    app.listen(port, () => {
+      console.log(`Server listening at http://localhost:${port}`);
+    });
+  } catch (err) {
+    console.error("Failed to create cache directory:", err);
+    process.exit(1);
+  }
+})();

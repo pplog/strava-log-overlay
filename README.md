@@ -69,7 +69,7 @@ cd strava-log-overlay
 ```bash
 node index.js
 ```
-サーバーが `http://localhost:3001` で起動します。
+サーバーが `http://localhost:3001` で起動します。初回起動時に、アクティビティデータを保存するための`cache`ディレクトリが自動的に作成されます。
 
 ### 2. フロントエンドアプリケーションの起動
 
@@ -155,7 +155,7 @@ In the `server` directory, run the following command:
 ```bash
 node index.js
 ```
-The server will start on `http://localhost:3001`.
+The server will start on `http://localhost:3001`. On the first run, it will automatically create a `cache` directory to store activity data.
 
 ### 2. Start the Frontend Application
 
