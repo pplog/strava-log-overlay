@@ -1,0 +1,68 @@
+.activity-list {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 300px;
+  max-height: calc(95vh - 60px); /* Adjust for refresh button */
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1000;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+.activity-list h2 {
+  margin-top: 0;
+  font-size: 1.2em;
+}
+
+.activity-list-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.activity-list-item:hover {
+  background-color: #f0f0f0;
+}
+
+.activity-list-item strong {
+  display: block;
+  font-size: 0.9em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.activity-list-item small {
+  color: #555;
+}
+
+.controls {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.controls button {
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: #fff;
+  border: 2px solid #fc5200; /* Strava Orange */
+  color: #fc5200;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.controls button:disabled {
+  background-color: #eee;
+  color: #aaa;
+  border-color: #ccc;
+  cursor: not-allowed;
+}

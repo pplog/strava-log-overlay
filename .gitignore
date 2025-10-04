@@ -1,0 +1,17 @@
+# Dependencies
+/node_modules
+/client/node_modules
+/server/node_modules
+
+# Strava API credentials and cache
+/server/.env
+/server/cache/
+
+# Build output
+/client/build
+
+# Misc
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
