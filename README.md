@@ -13,10 +13,6 @@ Stravaのアクティビティデータを可視化し、すべての軌跡を�
 - Leaflet マップ上にすべてのアクティビティの軌跡（ポリライン）を表示
 - リスト上のアクティビティにカーソルを合わせると、地図上の該当アクティビティをハイライト
 
-## 技術スタック
-
-- **Frontend**: React, Leaflet, react-leaflet
-- **Backend**: Node.js, Express
 
 ## セットアップとインストール
 
@@ -103,11 +99,6 @@ This web application visualizes your Strava activity data, displaying all your a
 - Fetches all your Strava activities and caches them on the server.
 - Displays all activity polylines on a Leaflet map.
 - Highlights activities on the map when you hover over them in the list.
-
-## Technology Stack
-
-- **Frontend**: React, Leaflet, react-leaflet
-- **Backend**: Node.js, Express
 
 ## Setup and Installation
 
