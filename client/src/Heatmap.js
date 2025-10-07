@@ -13,6 +13,7 @@ const Heatmap = ({ accessToken, athleteId }) => {
   const [displayedActivities, setDisplayedActivities] = useState([]); // New state for filtered activities
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
   const [hoveredActivityId, setHoveredActivityId] = useState(null);
   const mapRef = useRef();
 
@@ -29,6 +30,7 @@ const Heatmap = ({ accessToken, athleteId }) => {
       });
       if (!response.ok) throw new Error('Failed to fetch');
       const data = await response.json();
+      setLastUpdated(data.last_updated);
       
       const decodedActivities = data.activities.map(act => ({
         ...act,
@@ -148,7 +150,16 @@ const Heatmap = ({ accessToken, athleteId }) => {
       </MapContainer>
       <div className="controls">
         <button onClick={() => fetchActivities(true)} disabled={refreshing}>
-          {refreshing ? 'Refreshing...' : 'Refresh Data'}
+          {refreshing ? 'Refreshing...' : (
+            <>
+              Refresh Data
+              {lastUpdated && (
+                <span style={{ fontSize: '0.7em', color: '#333', display: 'block' }}>
+                  Last updated: {new Date(lastUpdated).toLocaleString()}
+                </span>
+              )}
+            </>
+          )}
         </button>
       </div>
       <MemoizedActivityList 

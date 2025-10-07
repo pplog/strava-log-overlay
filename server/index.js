@@ -81,8 +81,9 @@ const getActivities = async (req, res, forceRefresh = false) => {
   if (!forceRefresh) {
     try {
       const cachedData = await fs.readFile(cachePath, 'utf-8');
+      const stats = await fs.stat(cachePath);
       console.log('Serving from cache.');
-      return res.json(JSON.parse(cachedData));
+      return res.json({ ...JSON.parse(cachedData), last_updated: stats.mtime });
     } catch (error) {
       // Cache miss, proceed to fetch
       console.log('Cache miss. Fetching from Strava.');
@@ -106,7 +107,7 @@ const getActivities = async (req, res, forceRefresh = false) => {
 
     await fs.writeFile(cachePath, JSON.stringify({ activities }), 'utf-8');
     console.log('Cache created.');
-    res.json({ activities });
+    res.json({ activities, last_updated: new Date() });
   } catch (error) {
     res.status(500).send('Failed to fetch Strava activities.');
   }
