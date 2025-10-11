@@ -85,6 +85,14 @@ Reactアプリケーションが起動し、ブラウザで `http://localhost:30
 
 "Connect with Strava" ボタンをクリックして、アプリケーションを認証します。Stravaの認証ページにリダイレクトされ、許可を与えるとアプリケーションに戻り、アクティビティの地図が表示されます。
 
+### (別な方法) コマンド一発で起動
+
+プロジェクトのルートディレクトリで、以下のコマンドを実行すると、バックエンドとフロントエンドを同時に起動できます。
+
+```bash
+npm run dev
+```
+
 ---
 
 # Strava Log Overlay
@@ -173,3 +181,11 @@ The React application will start, and your browser should open to `http://localh
 ### 3. Connect with Strava
 
 Click the "Connect with Strava" button to authorize the application. You will be redirected to Strava to grant permissions and then redirected back to the application, where your activity map will be displayed.
+
+### (Alternative) Single Command Startup
+
+In the project root directory, you can run the following command to start both the backend and frontend concurrently:
+
+```bash
+npm run dev
+```
