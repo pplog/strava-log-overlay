@@ -15,6 +15,8 @@ const Heatmap = ({ accessToken, athleteId }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
   const [hoveredActivityId, setHoveredActivityId] = useState(null);
+  const [distanceFilter, setDistanceFilter] = useState(0);
+  const [elevationFilter, setElevationFilter] = useState(0);
   const mapRef = useRef();
 
   const fetchActivities = useCallback(async (forceRefresh = false) => {
@@ -37,6 +39,11 @@ const Heatmap = ({ accessToken, athleteId }) => {
         latlngs: polyline.decode(act.polyline)
       }));
 
+      // Log the first activity to inspect its structure
+      if (decodedActivities.length > 0) {
+        console.log("Sample activity data:", decodedActivities[0]);
+      }
+
       setActivities(decodedActivities);
     } catch (error) {
       console.error('Error fetching activities:', error);
@@ -55,65 +62,73 @@ const Heatmap = ({ accessToken, athleteId }) => {
   }, []);
 
   const handleActivityClick = useCallback((activityId) => {
-    console.log('Attempting to open Strava activity via programmatic link click:', activityId);
-    const url = `https://www.strava.com/activities/${activityId}`;
-    const link = document.createElement('a');
-    link.href = url;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer'; // Security best practice
-    document.body.appendChild(link); // Append to body is often necessary for programmatic clicks
-    link.click();
-    document.body.removeChild(link); // Clean up
-  }, []);
+    const activity = activities.find(act => act.id === activityId);
+    if (activity && activity.latlngs && activity.latlngs.length > 0 && mapRef.current) {
+      const bounds = L.polyline(activity.latlngs).getBounds();
+      mapRef.current.fitBounds(bounds, { padding: [50, 50] });
+    }
+  }, [activities]);
 
-  // Function to filter activities based on map bounds and zoom
-  const filterActivitiesByMap = useCallback((mapInstance) => {
-    if (!mapInstance || activities.length === 0) {
-      setDisplayedActivities(activities); // Show all if no map or no activities
+  const updateDisplayedActivities = useCallback((mapInstance) => {
+    if (activities.length === 0) {
+      setDisplayedActivities([]);
       return;
     }
 
-    const currentZoom = mapInstance.getZoom();
-    const bounds = mapInstance.getBounds(); // Get current map viewport bounds
+    let finalActivities;
 
-    const MIN_ZOOM_FOR_FILTERING = 10; // Define your zoom threshold
-
-    if (currentZoom < MIN_ZOOM_FOR_FILTERING) {
-      // If zoomed out, show all activities
-      setDisplayedActivities(activities);
-    } else {
-      // If zoomed in, filter activities
-      const filtered = activities.filter(activity => {
-        // Check if any point of the activity's polyline is within the current map bounds
-        return activity.latlngs.some(latlng => bounds.contains(L.latLng(latlng[0], latlng[1])));
-      });
-      setDisplayedActivities(filtered);
+    // If sliders are active, filter all activities by slider values
+    if (distanceFilter > 0 || elevationFilter > 0) {
+      let filteredBySliders = activities;
+      if (distanceFilter > 0) {
+        filteredBySliders = filteredBySliders.filter(act => (act.distance / 1000) >= distanceFilter);
+      }
+      if (elevationFilter > 0) {
+        filteredBySliders = filteredBySliders.filter(act => act.total_elevation_gain >= elevationFilter);
+      }
+      finalActivities = filteredBySliders;
     }
-  }, [activities]); // Recreate if 'activities' changes
+    // Otherwise (sliders are off), filter by map bounds
+    else {
+      const currentZoom = mapInstance ? mapInstance.getZoom() : 0;
+      const bounds = mapInstance ? mapInstance.getBounds() : null;
+      const MIN_ZOOM_FOR_FILTERING = 10;
+
+      if (mapInstance && currentZoom >= MIN_ZOOM_FOR_FILTERING && bounds) {
+        finalActivities = activities.filter(activity => {
+          return activity.latlngs.some(latlng => bounds.contains(L.latLng(latlng[0], latlng[1])));
+        });
+      } else {
+        // If zoomed out, show all activities
+        finalActivities = activities;
+      }
+    }
+    setDisplayedActivities(finalActivities);
+  }, [activities, distanceFilter, elevationFilter]);
 
   // Map event listener setup
   const MapEventsHandler = () => {
-    const map = useMap(); // Get the map instance
+    const map = useMap();
     useEffect(() => {
-      // Attach event listeners
-      map.on('zoomend', () => filterActivitiesByMap(map));
-      map.on('moveend', () => filterActivitiesByMap(map));
+      const handler = () => updateDisplayedActivities(map);
+      map.on('zoomend', handler);
+      map.on('moveend', handler);
 
-      // Cleanup
+      // Run on initial mount
+      handler();
+
       return () => {
-        map.off('zoomend', () => filterActivitiesByMap(map));
-        map.off('moveend', () => filterActivitiesByMap(map));
+        map.off('zoomend', handler);
+        map.off('moveend', handler);
       };
-    }, [map, activities, filterActivitiesByMap]); // Dependencies
+    }, [map, updateDisplayedActivities]);
     return null;
   };
 
-  // Update displayedActivities when activities are loaded initially
+  // Update displayedActivities when filters or activities change
   useEffect(() => {
-    if (activities.length > 0 && mapRef.current) {
-      filterActivitiesByMap(mapRef.current);
-    }
-  }, [activities, filterActivitiesByMap]);
+    updateDisplayedActivities(mapRef.current);
+  }, [activities, distanceFilter, elevationFilter, updateDisplayedActivities]);
 
   const AllPolylines = () => {
     return activities.map(activity => (
@@ -146,7 +161,7 @@ const Heatmap = ({ accessToken, athleteId }) => {
         />
         <AllPolylines />
         <HighlightedPolyline hoveredId={hoveredActivityId} />
-        <MapEventsHandler /> {/* Add the event handler component */}
+        <MapEventsHandler />
       </MapContainer>
       <div className="controls">
         <button onClick={() => fetchActivities(true)} disabled={refreshing}>
@@ -165,7 +180,12 @@ const Heatmap = ({ accessToken, athleteId }) => {
       <MemoizedActivityList 
         activities={displayedActivities} 
         onHover={handleActivityHover} 
-        onClick={handleActivityClick} 
+        onClick={handleActivityClick}
+        distanceFilter={distanceFilter}
+        elevationFilter={elevationFilter}
+        setDistanceFilter={setDistanceFilter}
+        setElevationFilter={setElevationFilter}
+        totalActivitiesCount={activities.length}
       />
     </div>
   );

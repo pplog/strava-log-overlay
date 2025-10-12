@@ -3,8 +3,8 @@ import './App.css';
 import Heatmap from './Heatmap';
 
 function App() {
-  const [accessToken, setAccessToken] = useState(null);
-  const [athleteId, setAthleteId] = useState(null);
+  const [accessToken, setAccessToken] = useState(localStorage.getItem('strava_access_token'));
+  const [athleteId, setAthleteId] = useState(localStorage.getItem('strava_athlete_id'));
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -13,6 +13,8 @@ function App() {
     if (token && id) {
       setAccessToken(token);
       setAthleteId(id);
+      localStorage.setItem('strava_access_token', token);
+      localStorage.setItem('strava_athlete_id', id);
       // Clean the URL
       window.history.replaceState({}, document.title, "/");
     }

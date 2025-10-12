@@ -101,6 +101,7 @@ const getActivities = async (req, res, forceRefresh = false) => {
       id: activity.id,
       name: activity.name,
       distance: activity.distance,
+      total_elevation_gain: activity.total_elevation_gain,
       start_date_local: activity.start_date_local,
       polyline: activity.map.summary_polyline,
     })).filter(activity => activity.polyline);

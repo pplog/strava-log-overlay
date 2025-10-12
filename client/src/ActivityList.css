@@ -5,11 +5,13 @@
   width: 300px;
   max-height: calc(95vh - 60px); /* Adjust for refresh button */
   overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
   background: rgba(255, 255, 255, 0.8);
   padding: 10px;
   border-radius: 5px;
   z-index: 1000;
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  box-sizing: border-box; /* Include padding in width */
 }
 
 .activity-list h2 {
@@ -17,52 +19,39 @@
   font-size: 1.2em;
 }
 
-.activity-list-item {
-  padding: 10px;
-  cursor: pointer;
+.filter-controls {
+  padding: 10px 0;
+  border-top: 1px solid #eee;
   border-bottom: 1px solid #eee;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  margin-bottom: 10px;
 }
 
-.activity-list-item:hover {
-  background-color: #f0f0f0;
+.filter-controls div {
+  margin-bottom: 8px;
 }
 
-.activity-list-item strong {
+.filter-controls label {
   display: block;
   font-size: 0.9em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin-bottom: 4px;
+  color: #333;
 }
 
-.activity-list-item small {
-  color: #555;
+.filter-controls input[type="range"] {
+  width: 100%;
 }
 
-.controls {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-}
-
-.controls button {
-  padding: 10px 20px;
-  font-size: 1em;
-  background-color: #fff;
-  border: 2px solid #fc5200; /* Strava Orange */
-  color: #fc5200;
-  border-radius: 5px;
+.reset-button {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
 }
 
-.controls button:disabled {
-  background-color: #eee;
-  color: #aaa;
-  border-color: #ccc;
-  cursor: not-allowed;
+.reset-button:hover {
+  background-color: #5a6268;
 }
