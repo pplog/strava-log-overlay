@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { FixedSizeList as List } from 'react-window';
 
 // Row component is defined outside to prevent re-creation on every render
 const Row = ({ index, style, data }) => {
-  const { activities, onHover, onClick } = data;
+  const { activities, onHover, onClick, clickedActivityId } = data;
   const activity = activities[index];
 
   const openStravaActivity = (e) => {
@@ -12,27 +12,39 @@ const Row = ({ index, style, data }) => {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
+  // Add a key to the class name to re-trigger animation on same-item-click
+  const itemKey = activity.id === clickedActivityId ? Date.now() : null;
+
   return (
     <div 
+      key={itemKey} // Add key to force re-render and re-trigger animation
       style={style} 
-      className="activity-list-item"
+      className={`activity-list-item ${activity.id === clickedActivityId ? 'activity-list-item--clicked' : ''}`}
       onClick={() => onClick(activity.id)} // This still moves the map
     >
       <div className="activity-info" onMouseEnter={() => onHover(activity.id)} onMouseLeave={() => onHover(null)}>
-        <strong>{activity.name}</strong>
-        <small>{new Date(activity.start_date_local).toLocaleDateString()} | {(activity.distance / 1000).toFixed(2)} km | {Math.round(activity.total_elevation_gain)} m</small>
+        <strong onClick={openStravaActivity}>{activity.name}</strong>
+        <small className="activity-date">{new Date(activity.start_date_local).toLocaleDateString()}</small>
+        <div className="activity-stats">
+          <span className="stat-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" className="bi bi-rulers" viewBox="0 0 16 16">
+              <path d="M1 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5v-1H2v-1h4v-1H2v-1h4v-1H2v-1h4v-1H2v-1h4V7H2V6h4V2h1v4h1V4h1v2h1V2h1v4h1V4h1v2h1V2h1v4h1V1a1 1 0 0 0-1-1H1z"/>
+            </svg>
+            {(activity.distance / 1000).toFixed(2)} km
+          </span>
+          <span className="stat-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" className="bi bi-graph-up" viewBox="0 0 16 16">
+              <path fillRule="evenodd" d="M0 0h1v15h15v1H0V0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+            {Math.round(activity.total_elevation_gain)} m
+          </span>
+        </div>
       </div>
-      <button className="strava-link-button" onClick={openStravaActivity} title="View on Strava">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
-          <path fillRule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
-          <path fillRule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
-        </svg>
-      </button>
     </div>
   );
 };
 
-const ActivityList = ({ 
+const ActivityList = forwardRef(({
   activities, 
   onHover, 
   onClick, 
@@ -40,8 +52,19 @@ const ActivityList = ({
   elevationFilter, 
   setDistanceFilter, 
   setElevationFilter, 
-  totalActivitiesCount 
-}) => {
+  totalActivitiesCount,
+  clickedActivityId
+}, ref) => {
+
+  const listRef = useRef();
+
+  useImperativeHandle(ref, () => ({
+    scrollToItem: (index) => {
+      if (listRef.current) {
+        listRef.current.scrollToItem(index, 'smart');
+      }
+    }
+  }));
 
   const isFiltered = distanceFilter > 0 || elevationFilter > 0;
 
@@ -85,16 +108,17 @@ const ActivityList = ({
         )}
       </div>
       <List
+        ref={listRef}
         height={window.innerHeight * 0.8 - 150} // Adjust height for filter controls
         itemCount={activities.length}
-        itemSize={65} // Approximate height of one list item
+        itemSize={90} // Approximate height of one list item
         width={'100%'}
-        itemData={{ activities, onHover, onClick }} // Pass data to Row component
+        itemData={{ activities, onHover, onClick, clickedActivityId }} // Pass data to Row component
       >
         {Row}
       </List>
     </div>
   );
-};
+});
 
 export default ActivityList;

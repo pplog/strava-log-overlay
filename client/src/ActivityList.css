@@ -55,3 +55,72 @@
 .reset-button:hover {
   background-color: #5a6268;
 }
+
+.activity-list-item {
+  display: flex;
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  height: 90px; /* Strictly enforce item height */
+  box-sizing: border-box; /* Ensure padding is included in height */
+}
+
+.activity-list-item:hover {
+  background-color: #f0f0f0;
+}
+
+.activity-info strong {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.activity-info strong:hover {
+  text-decoration: underline;
+}
+
+@keyframes click-highlight {
+  from {
+    background-color: #fce2c2;
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+.activity-list-item--clicked {
+  animation: click-highlight 2.4s ease-out;
+}
+
+.activity-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent long names from pushing the button away */
+  flex-grow: 1; /* Allow this element to grow */
+  min-width: 0; /* Allow this element to shrink below its content size */
+  align-items: flex-start; /* Explicitly align items to the left */
+  text-align: left; /* Ensure text is left-aligned */
+}
+
+.activity-date {
+  font-size: 0.8em;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.activity-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* Space between stat items */
+  font-size: 0.9em;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Space between icon and text */
+}
+
+.stat-item svg {
+  opacity: 0.7;
+}
