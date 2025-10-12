@@ -1,8 +1,10 @@
 # Strava Log Overlay (Strava ログオーバーレイアプリ)
 
-<img width="2557" height="1339" alt="image" src="https://github.com/user-attachments/assets/1ebea07f-9e72-4323-9562-41752bb10849" />
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/ae483ba5-5fd4-4276-81e9-dba13aa894ce" />
 
 ## 概要
+
+<img width="2093" height="1287" alt="image" src="https://github.com/user-attachments/assets/2bf8be6c-cc46-470e-949a-f652ecf1ec46" />
 
 Stravaのアクティビティデータを可視化し、すべての軌跡をインタラクティブな地図上に表示するウェブアプリケーションです。
 
@@ -83,9 +85,11 @@ npm run dev
 
 # Strava Log Overlay
 
-<img width="2557" height="1339" alt="image" src="https://github.com/user-attachments/assets/1ebea07f-9e72-4323-9562-41752bb10849" />
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/ae483ba5-5fd4-4276-81e9-dba13aa894ce" />
 
 ## Overview
+
+<img width="2093" height="1287" alt="image" src="https://github.com/user-attachments/assets/2bf8be6c-cc46-470e-949a-f652ecf1ec46" />
 
 This web application visualizes your Strava activity data, displaying all your activity tracks on an interactive map.
 
