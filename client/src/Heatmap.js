@@ -159,7 +159,7 @@ const Heatmap = ({ accessToken, athleteId }) => {
     if (!activity) return null;
     return <Polyline 
       positions={activity.latlngs} 
-      color="#fc5200" 
+      color="deeppink" 
       weight={5} 
       eventHandlers={{
         click: () => handlePolylineClick(activity),

@@ -81,7 +81,7 @@
 
 @keyframes click-highlight {
   from {
-    background-color: #fce2c2;
+    background-color: lightpink;
   }
   to {
     background-color: transparent;
